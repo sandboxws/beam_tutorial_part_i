@@ -1,0 +1,32 @@
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.sandboxws'
+version = '0.1'
+
+// name = "Data Pipelines"
+description = "Apache Beam Introduction - Building Your First Pipeline"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+run {
+    standardInput = System.in
+}
+mainClassName = 'com.sandboxws.BeamBatchPipeline'
+
+repositories {
+    mavenCentral()
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+}
+
+dependencies {
+    compile group: 'org.apache.beam', name: 'beam-sdks-java-core', version:'2.8.0'
+    runtime group: 'org.slf4j', name: 'slf4j-jdk14', version:'1.7.25'
+    runtime group: 'org.apache.beam', name: 'beam-runners-direct-java', version:'2.8.0'
+}
