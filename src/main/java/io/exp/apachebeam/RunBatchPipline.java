@@ -59,6 +59,6 @@ public class RunBatchPipline {
                 }
         ));
 
-
+        pipeline.run().waitUntilFinish();
     }
 }

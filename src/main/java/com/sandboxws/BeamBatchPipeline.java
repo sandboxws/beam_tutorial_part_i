@@ -29,7 +29,7 @@ public class BeamBatchPipeline {
         .apply("FormatResults",
             MapElements.into(TypeDescriptors.strings())
                 .via((KV<String, Long> ratingsCount) -> ratingsCount.getKey() + " " + ratingsCount.getValue()))
-        .apply(TextIO.write().to("./ratings_results").withSuffix(".csv"));
+        .apply(TextIO.write().to("./ratings_results").withSuffix(".txt"));
 
     // Run the pipeline and wait till it finishes before exiting
     pipeline.run().waitUntilFinish();
