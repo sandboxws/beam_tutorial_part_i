@@ -44,4 +44,6 @@ dependencies {
     compile "com.google.guava:guava:20.0"
 
     runtime "org.apache.beam:beam-runners-direct-java:$beamVersion"
+    testCompile "org.hamcrest:hamcrest-junit:2.0.0.0"
+    testCompile "junit:junit:4.12"
 }
