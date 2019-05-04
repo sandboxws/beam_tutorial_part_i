@@ -17,6 +17,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+class Json2PiInstruction extends DoFn<String, PiInstruction> {
+    @ProcessElement
+    public void processElement(@Element String c, OutputReceiver<PiInstruction> out) {
+        PiInstruction pi = PiInstruction.fromJson(c);
+        out.output(pi);
+    }
+}
 public class BeamPiRunner {
 
 
@@ -36,6 +43,7 @@ public class BeamPiRunner {
     //step2
     public static PCollection<PiInstruction> convertJSON2InstructionPipeline(PCollection<String> p) {
         PCollection<PiInstruction> pIn = p.apply(ParDo.of(
+
                 new DoFn<String, PiInstruction>() {
                     @ProcessElement
                     public void processElement(@Element String c, OutputReceiver<PiInstruction> out) {
@@ -45,6 +53,21 @@ public class BeamPiRunner {
                 }
         ));
 
-        return null;
+        return pIn;
     }
+
+
+    //testing function
+    public static PCollection<String> convertInstruction2JsonPipeline(PCollection<PiInstruction> p) {
+        PCollection<String> pStr = p.apply(ParDo.of(
+                new DoFn<PiInstruction, String>() {
+                    @ProcessElement
+                    public void processElement(@Element PiInstruction c, OutputReceiver<String> out) {
+                        out.output(c.toString());
+                    }
+                }
+        ));
+        return pStr;
+    }
+
 }

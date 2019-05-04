@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PiInstruction {
+public class PiInstruction implements  Serializable{
      String id;
     public String SeriesName;
     public int numOfSteps;
