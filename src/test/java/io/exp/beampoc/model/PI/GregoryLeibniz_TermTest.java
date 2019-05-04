@@ -1,5 +1,7 @@
-package io.exp.beampoc.model;
+package io.exp.beampoc.model.PI;
 
+import io.exp.beampoc.model.PI.GregoryLeibniz_Term;
+import io.exp.beampoc.model.PI.PI_Term;
 import org.hamcrest.number.IsCloseTo;
 import org.junit.Test;
 

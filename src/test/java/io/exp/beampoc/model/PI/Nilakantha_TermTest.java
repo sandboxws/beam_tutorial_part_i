@@ -1,11 +1,10 @@
-package io.exp.beampoc.model;
+package io.exp.beampoc.model.PI;
 
 
+import io.exp.beampoc.model.PI.Nilakantha_Term;
+import io.exp.beampoc.model.PI.PI_Term;
 import org.hamcrest.number.IsCloseTo;
 import org.junit.Test;
-
-import java.util.LinkedList;
-import java.util.List;
 
 
 import static org.junit.Assert.*;

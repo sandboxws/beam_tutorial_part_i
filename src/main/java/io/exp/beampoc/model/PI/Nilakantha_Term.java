@@ -1,4 +1,4 @@
-package io.exp.beampoc.model;
+package io.exp.beampoc.model.PI;
 
 public class Nilakantha_Term implements  PI_Term{
 

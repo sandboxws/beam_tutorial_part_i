@@ -1,4 +1,4 @@
-package io.exp.beampoc.model;
+package io.exp.beampoc.model.PI;
 
 public interface PI_Term {
     public void setTerm(int term);
