@@ -11,7 +11,7 @@ public class GregoryLeibniz_Term  implements PI_Term{
         this();
         this.setTerm(t);
     }
-
+    @Override
     public int getTerm() {
         return term;
     }

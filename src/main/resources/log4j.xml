@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <logger name="io.exp.apachebeam">
+    <logger name="io.exp.beampoc">
         <level value="DEBUG"/>
     </logger>
 

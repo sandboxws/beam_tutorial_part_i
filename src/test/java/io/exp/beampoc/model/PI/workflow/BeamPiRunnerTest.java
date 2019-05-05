@@ -1,5 +1,6 @@
 package io.exp.beampoc.model.PI.workflow;
 
+import io.exp.beampoc.model.PI.PI_Term;
 import io.exp.beampoc.model.PI.PiInstruction;
 import io.exp.beampoc.model.PI.generate.PiInstructionGenerator;
 import org.apache.beam.sdk.Pipeline;
@@ -8,8 +9,10 @@ import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
+import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.transforms.*;
 import org.apache.beam.sdk.values.PCollection;
+import org.hamcrest.number.IsCloseTo;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -64,6 +67,28 @@ class PiInstruction2Json extends DoFn< PiInstruction,String> {
     public void processElement(@Element PiInstruction c, OutputReceiver<String> out) {
         out.output(c.toString());
     }
+}
+
+class NilakanthaCheckPiResult implements SerializableFunction<Iterable<Double>, Void>{
+    @Override
+    public Void apply(Iterable<Double> input) {
+        double value=0.0;
+        long cnt=0;
+        for (Double v : input) {
+            cnt++;
+            value = v;
+        }
+
+        assert(cnt==1);
+        double pi = 3+value;
+
+        double diff = Math.abs(pi-Math.PI);
+        System.out.println("Nilakantha:"+pi);
+        assertThat(diff, new IsCloseTo(0,1e-11));
+
+        return  null;
+    }
+
 }
 public class BeamPiRunnerTest {
 
@@ -123,7 +148,7 @@ public class BeamPiRunnerTest {
     @Test
     public void constructInstructionPipeline() {
 
-        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream();
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(10);
 
         PipelineOptions options = PipelineOptionsFactory.create();
 
@@ -147,5 +172,43 @@ public class BeamPiRunnerTest {
         )).apply(TextIO.write().to("./instresults").withSuffix(".txt"));;*/
         pipeline.run().waitUntilFinish();
 
+    }
+
+    @Test
+    public void generatePiTermfromPiInstruction() {
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(1,"Nilakantha");
+
+        PipelineOptions options = PipelineOptionsFactory.create();
+
+        // Create the Pipeline object with the options we defined above.
+
+        Pipeline pipeline = Pipeline.create(options);
+        PCollection<String> pJson=BeamPiRunner.readInstruction2JsonPipeline(pipeline,s);
+        PCollection<PiInstruction> pInst = BeamPiRunner.convertJSON2InstructionPipeline(pJson);
+        //PCollection<PI_Term> piTermInst = BeamPiRunner.generatePiTermfromPiInstruction(pInst);
+        PCollection<Double> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow2());
+
+        PAssert.that(dC).satisfies(
+                new NilakanthaCheckPiResult()
+                /*
+                IN Unit test, annoymous class not working
+                new SerializableFunction<Iterable<Double>, Void>(){
+            @Override
+            public Void apply(Iterable<Double> input) {
+                double value=0.0;
+                long cnt=0;
+                for (Double v : input) {
+                    cnt++;
+                    value = v;
+                }
+
+                assert(cnt==1);
+                double pi = 3+value;
+
+                return  null;
+            }
+        }*/);
+
+        pipeline.run().waitUntilFinish();
     }
 }
