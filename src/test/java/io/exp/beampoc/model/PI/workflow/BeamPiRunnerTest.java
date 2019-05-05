@@ -84,7 +84,7 @@ class NilakanthaCheckPiResult implements SerializableFunction<Iterable<Double>, 
 
         double diff = Math.abs(pi-Math.PI);
         System.out.println("Nilakantha:"+pi);
-        assertThat(diff, new IsCloseTo(0,1e-11));
+        assertThat(diff, new IsCloseTo(0,1e-6));
 
         return  null;
     }
