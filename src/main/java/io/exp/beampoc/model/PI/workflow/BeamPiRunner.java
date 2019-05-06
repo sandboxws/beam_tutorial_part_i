@@ -1,22 +1,25 @@
 package io.exp.beampoc.model.PI.workflow;
 
 import io.exp.beampoc.model.PI.*;
+import io.exp.beampoc.model.PI.beam.BeamCalcPiTerm;
+
+import io.exp.beampoc.model.PI.beam.BeamCalcTerm;
 import org.apache.beam.sdk.Pipeline;
 
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.transforms.*;
+
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
-import org.apache.beam.sdk.values.PCollectionView;
+
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 import java.util.stream.Stream;
 
 
@@ -73,6 +76,8 @@ public class BeamPiRunner {
 //
 //        return pOut;
 //    }
+
+
 
 
     /**
@@ -141,6 +146,138 @@ public class BeamPiRunner {
                     }
             )
             );
+
+            PCollection<Double> outputDbl = dOut;
+            return outputDbl;
+        }
+    }
+
+
+    static class CalculatePiWorkflow2
+            extends PTransform<PCollection<PiInstruction>, PCollection<Double>> {
+
+        public static PTransform<PCollection<KV<String, java.lang.Double>>, PCollection<KV<String, Double>>> perKey() {
+            return Combine.perKey(new SerializableFunction<Iterable<Double>, Double>() {
+                @Override
+                public Double apply(Iterable<Double> input) {
+                    double accum=0.0;
+
+                    for (Double d : input){
+                        accum+= d;
+                    }
+                    return accum;
+                }
+            });
+        }
+
+        @Override
+        public PCollection< Double > expand(PCollection<PiInstruction> pIn) {
+
+//            PCollection<BeamCalcPiTerm> calcOut = pIn.apply("BeamCalcTerm",
+//                    ParDo.of(
+//                            new DoFn<PiInstruction, BeamCalcPiTerm>() {
+//                                @ProcessElement
+//                                public void processElement(@Element PiInstruction c, OutputReceiver< BeamCalcPiTerm > out) {
+//                                    for (int i=0;i<c.numOfSteps;i++){
+//                                        PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
+//                                        out.output(BeamCalcPiTerm.of(c.id,t));
+//
+//                                    }
+//                                }
+//                            }
+//
+//                    )
+//            );
+            PCollection<BeamCalcTerm<PI_Term> > calcOut =pIn.apply("BeamCalcTerm",
+                    ParDo.of(
+                            new DoFn<PiInstruction, BeamCalcTerm<PI_Term>>() {
+                                @ProcessElement
+                                public void processElement(@Element PiInstruction c, OutputReceiver< BeamCalcTerm<PI_Term> > out) {
+                                    for (int i=0;i<c.numOfSteps;i++) {
+                                        PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
+                                        BeamCalcTerm<PI_Term> p = new BeamCalcTerm<PI_Term>();
+                                        p.JobKey=c.id;
+                                        p.term = t;
+                                        assert(p.term!=null);
+                                        out.output(p);
+                                    }
+                                    LOGGER.debug("Setup:"+c.id+"Seriesname:"+c.SeriesName+":"+c.numOfSteps+"steps");
+                                }
+                            }
+                    )
+            );
+
+            PCollection< BeamCalcTerm<Double> > pOut=calcOut.apply("Calculate_PiTerms",
+                    ParDo.of(
+                    new DoFn< BeamCalcTerm<PI_Term>, BeamCalcTerm<Double> >() {
+                        @ProcessElement
+                        public void processElement(@Element BeamCalcTerm<PI_Term> t, OutputReceiver< BeamCalcTerm<Double> > out){
+
+                            Optional< BeamCalcTerm<PI_Term> > tt = Optional.ofNullable(t);
+                            tt.ifPresent(ts->{
+                                Optional<PI_Term> term = Optional.ofNullable(ts.term);
+                                if(term.isPresent()) {
+                                    double d = ts.term.calculateTerm();
+                                    BeamCalcTerm<Double> dd = new BeamCalcTerm<Double>();
+                                    dd.JobKey = t.JobKey;
+                                    dd.term = d;
+                                    out.output(dd);
+                                }
+                               // LOGGER.debug("Grp:"+dd.JobKey+"Term:"+(ts).term.getTerm() +":"+dd.term);
+                            });
+                        }
+                    }
+            ));
+
+            PCollection<KV<String, Double> > mOut = pOut.apply(
+
+                    "Map_term", MapElements.via(new SimpleFunction< BeamCalcTerm<Double>, KV<String, Double>>() {
+                        public KV<String, Double> apply(BeamCalcTerm<Double> element) {
+                            return KV.of(element.JobKey, (Double)element.term);
+                        }
+                    })
+            ).apply(perKey());
+
+
+            PCollection< Double > dOut = mOut.apply(
+                    ParDo.of(
+                            new DoFn<  KV<String, Double> , Double>() {
+                                @ProcessElement
+                                public void processElement(@Element KV<String, Double> dd , OutputReceiver<Double> out){
+                                    out.output(dd.getValue());
+                                    LOGGER.debug("Grp:"+dd.getKey()+" value:"+dd.getValue());
+                                }
+                            }
+                    )
+            );
+
+            /*
+            PCollection< KV<String, PI_Term> > pOut = pIn.apply("PiTerms",
+                    MapElements.via(new SimpleFunction<PiInstruction, KV<String, PI_Term>>() {
+                        public KV<String, PI_Term> apply(PiInstruction element) {
+
+                            for (int i=0;i<c.numOfSteps;i++){
+                                PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
+                                out.output(t);
+
+                            }
+                            return KV.of(element, (Void)null);
+                        }
+                    })
+
+            );*/
+
+            /*
+            final PCollection<KV<String,PI_FinalCalc>> pFinal = pIn.apply(ParDo.of(
+                    new DoFn<PiInstruction, PI_FinalCalc>() {
+                        @ProcessElement
+                        public void processElement(@Element PiInstruction c, OutputReceiver<PI_FinalCalc> out){
+                            PI_FinalCalc finalCalc=PiInfiniteSeriesFactory.getFinalCalc(c.SeriesName);
+                            out.output(finalCalc);
+                        }
+                    }
+            ));*/
+
 
             PCollection<Double> outputDbl = dOut;
             return outputDbl;

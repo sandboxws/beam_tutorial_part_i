@@ -10,17 +10,20 @@ public class PiInfiniteSeriesFactory {
     final static Logger logger= LoggerFactory.getLogger(PiInfiniteSeriesFactory.class);
     final public static String packageName= "io.exp.beampoc.model.PI.";
 
-    public final static Map<String, Class> classMap = new HashMap<String, Class>();
+    //public final static Map<String, Class> classMap = new HashMap<String, Class>();
 
     public final static PI_Term createTerm(String SeriesName, int term){
         PI_Term t = null;
+        Class c=null;
         try {
-            Class c = PiInfiniteSeriesFactory.getClass(SeriesName);
+            c = PiInfiniteSeriesFactory.getClass(SeriesName);
             t=(PI_Term)c.newInstance();
+            assert(t!=null);
             t.setTerm(term);
+
         }catch(Exception e){
             logger.error(e.getMessage());
-            t=null;
+
         }
         return t;
     }
@@ -39,7 +42,10 @@ public class PiInfiniteSeriesFactory {
 
     public final static Class getClass(String SeriesName) throws ClassNotFoundException {
         String _className = packageName+SeriesName+"_Term";
-        Class c =classMap.get(SeriesName);
+        Class c =null;
+        /*
+        Cannot be used under Apache Beam
+        c=classMap.get(SeriesName);
         if(c == null){
             synchronized ((classMap)){
                 if(classMap.get(SeriesName)==null){
@@ -47,8 +53,9 @@ public class PiInfiniteSeriesFactory {
                     classMap.put(SeriesName,c);
                 }
             }
-        }
+        }*/
 
+        c=Class.forName(_className);
         return c;
     }
 }
