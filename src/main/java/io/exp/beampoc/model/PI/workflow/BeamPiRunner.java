@@ -1,5 +1,6 @@
 package io.exp.beampoc.model.PI.workflow;
 
+import com.sun.scenario.effect.Merge;
 import io.exp.beampoc.model.PI.*;
 import io.exp.beampoc.model.PI.beam.BeamCalcPiTerm;
 
@@ -9,9 +10,13 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.transforms.*;
 
+import org.apache.beam.sdk.transforms.join.CoGbkResult;
+import org.apache.beam.sdk.transforms.join.CoGroupByKey;
+import org.apache.beam.sdk.transforms.join.KeyedPCollectionTuple;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 
+import org.apache.beam.sdk.values.TupleTag;
 import org.slf4j.LoggerFactory;
 
 
@@ -92,7 +97,7 @@ public class BeamPiRunner {
      */
 
 
-    static class CalculatePiWorkflow
+    static class CalculatePiWorkflowInComplete
             extends PTransform<PCollection<PiInstruction>, PCollection<Double>> {
         @Override
         public PCollection<Double> expand(PCollection<PiInstruction> pIn) {
@@ -153,7 +158,7 @@ public class BeamPiRunner {
     }
 
 
-    static class CalculatePiWorkflow2
+    static class CalculatePiWorkflow
             extends PTransform<PCollection<PiInstruction>, PCollection<Double>> {
 
         public static PTransform<PCollection<KV<String, java.lang.Double>>, PCollection<KV<String, Double>>> perKey() {
@@ -206,7 +211,7 @@ public class BeamPiRunner {
                             }
                     )
             );
-            final PCollection< KV<String, PI_FinalCalc> > pFinal = pIn.apply(
+            final PCollection< KV<String, PI_FinalCalc> > pFinalStep = pIn.apply(
                     ParDo.of(
                             new DoFn<PiInstruction, KV<String, PI_FinalCalc> >(){
                                 @ProcessElement
@@ -241,7 +246,7 @@ public class BeamPiRunner {
                     }
             ));
 
-            PCollection<KV<String, Double> > mOut = pOut.apply(
+            PCollection<KV<String, Double> > SumOut = pOut.apply(
 
                     "Map_term", MapElements.via(new SimpleFunction< BeamCalcTerm<Double>, KV<String, Double>>() {
                         public KV<String, Double> apply(BeamCalcTerm<Double> element) {
@@ -251,9 +256,30 @@ public class BeamPiRunner {
             ).apply(perKey());
 
 
+            //CoGroup by Key
+            TupleTag<Double> SeriesTag = new TupleTag<>();
+            TupleTag<PI_FinalCalc> finalizeTag = new TupleTag<>();
+            PCollection< KV<String, CoGbkResult> > MergeResult = KeyedPCollectionTuple.of(SeriesTag, SumOut)
+                    .and(finalizeTag, pFinalStep)
+                    .apply(CoGroupByKey.create());
 
+            //Final Pi values
+            PCollection < KV<String, Double> > finalPi= MergeResult.apply(
+                    ParDo.of(
+                            new DoFn<KV<String, CoGbkResult>, KV<String, Double>>() {
+                                @ProcessElement
+                                public void processElement(@Element KV<String, CoGbkResult> r, OutputReceiver< KV<String, Double> > out){
+                                    Double sumValueItr = r.getValue().getOnly(SeriesTag);
+                                    PI_FinalCalc finalCalc = r.getValue().getOnly(finalizeTag);
+                                    String k = r.getKey();
+                                    double value = finalCalc.finalCalculation(sumValueItr);
+                                    out.output( KV.of (k,value) );
+                                }
+                            }
+                    )
+            );
 
-            PCollection< Double > dOut = mOut.apply(
+            PCollection< Double > dOut = finalPi.apply(
                     ParDo.of(
                             new DoFn<  KV<String, Double> , Double>() {
                                 @ProcessElement
@@ -264,25 +290,6 @@ public class BeamPiRunner {
                             }
                     )
             );
-
-            /*
-            PCollection< KV<String, PI_Term> > pOut = pIn.apply("PiTerms",
-                    MapElements.via(new SimpleFunction<PiInstruction, KV<String, PI_Term>>() {
-                        public KV<String, PI_Term> apply(PiInstruction element) {
-
-                            for (int i=0;i<c.numOfSteps;i++){
-                                PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
-                                out.output(t);
-
-                            }
-                            return KV.of(element, (Void)null);
-                        }
-                    })
-
-            );*/
-
-
-
 
             PCollection<Double> outputDbl = dOut;
             return outputDbl;

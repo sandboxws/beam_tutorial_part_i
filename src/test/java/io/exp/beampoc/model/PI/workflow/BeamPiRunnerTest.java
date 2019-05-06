@@ -187,7 +187,7 @@ public class BeamPiRunnerTest {
         PCollection<String> pJson=BeamPiRunner.readInstruction2JsonPipeline(pipeline,s);
         PCollection<PiInstruction> pInst = BeamPiRunner.convertJSON2InstructionPipeline(pJson);
 
-        PCollection<Double> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow2());
+        PCollection<Double> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow());
 
         /*
         PAssert.that(dC).satisfies(
