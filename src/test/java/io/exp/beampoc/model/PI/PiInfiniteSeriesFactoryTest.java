@@ -19,7 +19,7 @@ public class PiInfiniteSeriesFactoryTest {
             PI_Term t = PiInfiniteSeriesFactory.createTerm(seriesName,i);
             d+=( t).calculateTerm();
         }
-        double pi = new Nilakantha_Term(0).finalCalculation(d);
+        double pi =  PiInfiniteSeriesFactory.getFinalCalc(seriesName).finalCalculation(d);
         double diff = Math.abs(pi-Math.PI);
         System.out.println(pi);
         assertThat(diff, new IsCloseTo(0,1e-11));

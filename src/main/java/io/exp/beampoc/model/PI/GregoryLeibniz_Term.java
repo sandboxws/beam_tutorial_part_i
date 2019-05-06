@@ -31,8 +31,13 @@ public class GregoryLeibniz_Term  implements PI_Term{
         return isOddTerm?(-1/y):(1/y);
     }
 
+//    @Override
+//    public double finalCalculation(double accumOfSeries) {
+//        return accumOfSeries*4;
+//    }
+
     @Override
-    public double finalCalculation(double accumOfSeries) {
-        return accumOfSeries*4;
+    public PI_FinalCalc getFinalCalculation() {
+        return (accumOfSeries -> accumOfSeries*4);
     }
 }

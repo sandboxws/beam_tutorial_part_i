@@ -11,7 +11,7 @@ public class PiInstructionGenerator {
     final static String[] SeriesNames={"Nilakantha","GregoryLeibniz"};
 
 
-    public static Stream<PiInstruction> randomInstructionStream(int maxLimit,String... name){
+    public static Stream<PiInstruction> randomInstructionStream(int maxItems, int maxStep,String... name){
         long forceSeries=0;
         String[] forceSeriesName={""};
         if(name.length>0){
@@ -30,10 +30,12 @@ public class PiInstructionGenerator {
             }else{
                 p.SeriesName=forceSeriesName[0];
             }
-            int rStep = (int)Math.floor(Math.random() * 5)+1;
-            p.numOfSteps = 1000 * rStep;
+            int rStep = 0;
+            rStep = (maxStep==0)? ((int) Math.floor(Math.random() * 5) + 1)*1000:maxStep;
+
+            p.numOfSteps =rStep;
             return p;
-        }).limit(maxLimit);
+        }).limit(maxItems);
 
         return stream;
     }

@@ -24,7 +24,7 @@ public class Nilakantha_TermTest {
             d+=( t).calculateTerm();
         }
 
-        double pi = new Nilakantha_Term(0).finalCalculation(d);
+        double pi = new Nilakantha_Term(0).getFinalCalculation().finalCalculation(d);
         double diff = Math.abs(pi-Math.PI);
         System.out.println(pi);
         assertThat(diff, new IsCloseTo(0,1e-11));

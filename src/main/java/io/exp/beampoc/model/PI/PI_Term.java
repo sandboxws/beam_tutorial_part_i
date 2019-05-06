@@ -6,5 +6,7 @@ public interface PI_Term extends Serializable {
     public int getTerm();
     public void setTerm(int term);
     public double calculateTerm();
-    public double finalCalculation(double accumOfSeries);
+    //public double finalCalculation(double accumOfSeries);
+
+    public PI_FinalCalc getFinalCalculation();
 }

@@ -33,12 +33,13 @@ public class Nilakantha_Term implements  PI_Term{
         return isOddTerm?(-4.0/factor):(4.0/factor);
     }
 
+    //@Override
+//    public double finalCalculation(double accumOfSeries){
+//        return 3.0 + accumOfSeries;
+//    }
+
     @Override
-    public double finalCalculation(double accumOfSeries){
-        return 3.0 + accumOfSeries;
+    public PI_FinalCalc getFinalCalculation() {
+        return (accumOfSeries -> (3.0 + accumOfSeries));
     }
-
-
-
-
 }

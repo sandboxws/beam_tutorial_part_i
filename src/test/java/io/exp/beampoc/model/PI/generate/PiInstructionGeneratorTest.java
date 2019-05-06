@@ -11,7 +11,7 @@ public class PiInstructionGeneratorTest {
     @Test
     public void randomInstructionStream() {
         final int cnt_Total=10;
-        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total);
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total,0);
 
         Iterator<PiInstruction> itr=s.iterator();
         int cnt=0;
@@ -28,7 +28,7 @@ public class PiInstructionGeneratorTest {
         final int cnt_Total=10;
 
         try {
-            Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total,"ABcd");
+            Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total,0,"ABcd");
 
             Iterator<PiInstruction> itr=s.iterator();
             int cnt = 0;
@@ -47,7 +47,7 @@ public class PiInstructionGeneratorTest {
     public void returnSeriesName() {
         final int cnt_Total=10;
 
-            Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total,"Nilakantha");
+            Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total,0,"Nilakantha");
 
             Iterator<PiInstruction> itr=s.iterator();
             int cnt = 0;
@@ -56,7 +56,27 @@ public class PiInstructionGeneratorTest {
                 System.out.println(p.toString());
                 cnt++;
                 assert("Nilakantha".equals(p.SeriesName));
+                assert(p.numOfSteps>=1000);
             }
+            assert(cnt==cnt_Total);
+    }
+    @Test
+    public void return5SeriesName() {
+        final int cnt_Total=1;
+        final int maxStep=5;
+
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream( cnt_Total,maxStep,"Nilakantha");
+
+        Iterator<PiInstruction> itr=s.iterator();
+        int cnt = 0;
+        while (itr.hasNext()) {
+            PiInstruction p = itr.next();
+            System.out.println(p.toString());
+            cnt++;
+            assert("Nilakantha".equals(p.SeriesName));
+            assert (maxStep == p.numOfSteps);
+        }
+
 
     }
 

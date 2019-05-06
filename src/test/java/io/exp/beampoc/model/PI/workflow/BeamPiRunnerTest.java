@@ -108,7 +108,7 @@ public class BeamPiRunnerTest {
         p.run().waitUntilFinish();
     }
 
-//  Run as inner class , not working!!!
+//  Run as anonymous class of ParDo, not working!!!
 //    class ProcessWords
 //            extends PTransform<PCollection<String>, PCollection<String>> {
 //        final static String TOKENIZER_PATTERN = "[^\\p{L}]+";
@@ -148,7 +148,7 @@ public class BeamPiRunnerTest {
     @Test
     public void constructInstructionPipeline() {
 
-        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(10);
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(10,0);
 
         PipelineOptions options = PipelineOptionsFactory.create();
 
@@ -162,9 +162,10 @@ public class BeamPiRunnerTest {
 
         PCollection<String> pJson=BeamPiRunner.readInstruction2JsonPipeline(pipeline,s);
         PCollection<PiInstruction> pInst = BeamPiRunner.convertJSON2InstructionPipeline(pJson);
-
+/*
         BeamPiRunner.convertInstruction2JsonPipeline(pInst)
                 .apply(TextIO.write().to("./instresults").withSuffix(".txt"));
+                */
        /*
         pInst.apply(ParDo.of(
                 //Not workable as anoymous class
@@ -176,7 +177,7 @@ public class BeamPiRunnerTest {
 
     @Test
     public void generatePiTermfromPiInstruction() {
-        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(1,"Nilakantha");
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(1,100,"Nilakantha");
 
         PipelineOptions options = PipelineOptionsFactory.create();
 
@@ -185,13 +186,13 @@ public class BeamPiRunnerTest {
         Pipeline pipeline = Pipeline.create(options);
         PCollection<String> pJson=BeamPiRunner.readInstruction2JsonPipeline(pipeline,s);
         PCollection<PiInstruction> pInst = BeamPiRunner.convertJSON2InstructionPipeline(pJson);
-        //PCollection<PI_Term> piTermInst = BeamPiRunner.generatePiTermfromPiInstruction(pInst);
-        PCollection<Double> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow2());
+
+        PCollection<Double> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow());
 
         PAssert.that(dC).satisfies(
                 new NilakanthaCheckPiResult()
                 /*
-                IN Unit test, annoymous class not working
+                IN Unit test, anonymous class of SerializableFunction not working
                 new SerializableFunction<Iterable<Double>, Void>(){
             @Override
             public Void apply(Iterable<Double> input) {

@@ -24,6 +24,18 @@ public class PiInfiniteSeriesFactory {
         }
         return t;
     }
+    public final static PI_FinalCalc getFinalCalc(String SeriesName){
+        PI_FinalCalc finalCalc=null;
+        try {
+            Class c = PiInfiniteSeriesFactory.getClass(SeriesName);
+            finalCalc=((PI_Term)c.newInstance()).getFinalCalculation();
+
+        }catch(Exception e){
+            logger.error(e.getMessage());
+            finalCalc=null;
+        }
+        return finalCalc;
+    }
 
     public final static Class getClass(String SeriesName) throws ClassNotFoundException {
         String _className = packageName+SeriesName+"_Term";
