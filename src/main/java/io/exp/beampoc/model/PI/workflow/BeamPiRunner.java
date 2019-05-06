@@ -206,6 +206,18 @@ public class BeamPiRunner {
                             }
                     )
             );
+            final PCollection< KV<String, PI_FinalCalc> > pFinal = pIn.apply(
+                    ParDo.of(
+                            new DoFn<PiInstruction, KV<String, PI_FinalCalc> >(){
+                                @ProcessElement
+                                public void processElement(@Element PiInstruction c, OutputReceiver < KV <String, PI_FinalCalc> > out ){
+                                    PI_FinalCalc finalCalc=PiInfiniteSeriesFactory.getFinalCalc(c.SeriesName);
+                                    out.output( KV.of(c.id, finalCalc) );
+                                }
+                            }
+                    )
+
+            );
 
             PCollection< BeamCalcTerm<Double> > pOut=calcOut.apply("Calculate_PiTerms",
                     ParDo.of(
@@ -239,6 +251,8 @@ public class BeamPiRunner {
             ).apply(perKey());
 
 
+
+
             PCollection< Double > dOut = mOut.apply(
                     ParDo.of(
                             new DoFn<  KV<String, Double> , Double>() {
@@ -267,16 +281,7 @@ public class BeamPiRunner {
 
             );*/
 
-            /*
-            final PCollection<KV<String,PI_FinalCalc>> pFinal = pIn.apply(ParDo.of(
-                    new DoFn<PiInstruction, PI_FinalCalc>() {
-                        @ProcessElement
-                        public void processElement(@Element PiInstruction c, OutputReceiver<PI_FinalCalc> out){
-                            PI_FinalCalc finalCalc=PiInfiniteSeriesFactory.getFinalCalc(c.SeriesName);
-                            out.output(finalCalc);
-                        }
-                    }
-            ));*/
+
 
 
             PCollection<Double> outputDbl = dOut;
