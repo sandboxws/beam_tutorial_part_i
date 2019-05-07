@@ -14,4 +14,8 @@ public interface ExecutePipelineOptions extends PipelineOptions {
     String getOutput();
 
     void setOutput(String value);
+/*
+    public String getFlinkMaster();
+
+    void setFlinkMaster(String value);*/
 }
