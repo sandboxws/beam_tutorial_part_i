@@ -1,0 +1,6 @@
+println 'running flink runner build'
+dependencies {
+    compile "org.apache.beam:beam-runners-flink_2.11:$beamVersion"
+    runtime "org.apache.beam:beam-runners-flink_2.11:$beamVersion"
+    testRuntime "org.apache.beam:beam-runners-direct-java:$beamVersion"
+}

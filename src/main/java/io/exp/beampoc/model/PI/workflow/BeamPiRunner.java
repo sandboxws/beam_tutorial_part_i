@@ -140,7 +140,7 @@ public class BeamPiRunner {
 
 
     public static class CalculatePiWorkflow
-            extends PTransform<PCollection<PiInstruction>, PCollection<Double>> {
+            extends PTransform<PCollection<PiInstruction>, PCollection<KV<String,Double>> > {
 
         public static PTransform<PCollection<KV<String, java.lang.Double>>, PCollection<KV<String, Double>>> perKey() {
             return Combine.perKey(new SerializableFunction<Iterable<Double>, Double>() {
@@ -157,7 +157,7 @@ public class BeamPiRunner {
         }
 
         @Override
-        public PCollection< Double > expand(PCollection<PiInstruction> pIn) {
+        public PCollection< KV<String, Double> > expand(PCollection<PiInstruction> pIn) {
 
 
             PCollection<BeamCalcTerm<PI_Term> > calcOut =pIn.apply("BeamCalcTerm",
@@ -251,20 +251,20 @@ public class BeamPiRunner {
                     )
             );
 
-            PCollection< Double > dOut = finalPi.apply(
-                    ParDo.of(
-                            new DoFn<  KV<String, Double> , Double>() {
-                                @ProcessElement
-                                public void processElement(@Element KV<String, Double> dd , OutputReceiver<Double> out){
-                                    out.output(dd.getValue());
-                                    LOGGER.debug("Grp:"+dd.getKey()+" value:"+dd.getValue());
-                                }
-                            }
-                    )
-            );
-
-            PCollection<Double> outputDbl = dOut;
-            return outputDbl;
+//            PCollection< Double > dOut = finalPi.apply(
+//                    ParDo.of(
+//                            new DoFn<  KV<String, Double> , Double>() {
+//                                @ProcessElement
+//                                public void processElement(@Element KV<String, Double> dd , OutputReceiver<Double> out){
+//                                    out.output(dd.getValue());
+//                                    LOGGER.debug("Grp:"+dd.getKey()+" value:"+dd.getValue());
+//                                }
+//                            }
+//                    )
+//            );
+//
+//            PCollection<Double> outputDbl = dOut;
+            return finalPi;
         }
     }
 /*

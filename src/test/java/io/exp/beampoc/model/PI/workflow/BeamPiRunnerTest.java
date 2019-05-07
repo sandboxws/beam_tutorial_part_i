@@ -9,6 +9,7 @@ import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.transforms.*;
+import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.hamcrest.number.IsCloseTo;
 import org.junit.Test;
@@ -67,14 +68,14 @@ class PiInstruction2Json extends DoFn< PiInstruction,String> {
     }
 }
 
-class NilakanthaCheckPiResult implements SerializableFunction<Iterable<Double>, Void>{
+class NilakanthaCheckPiResult implements SerializableFunction<Iterable<KV< String, Double> >, Void>{
     @Override
-    public Void apply(Iterable<Double> input) {
+    public Void apply(Iterable<KV<String, Double>> input) {
 
         long cnt=0;
-        for (Double v : input) {
+        for (KV< String, Double> v : input) {
             cnt++;
-            double pi = v;
+            double pi = v.getValue();
 
             double diff = Math.abs(pi-Math.PI);
             assertThat(diff, new IsCloseTo(0,1e-6));
@@ -181,7 +182,7 @@ public class BeamPiRunnerTest {
         PCollection<String> pJson=BeamPiRunner.readInstruction2JsonPipeline(pipeline,s);
         PCollection<PiInstruction> pInst = BeamPiRunner.convertJSON2InstructionPipeline(pJson);
 
-        PCollection<Double> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow());
+        PCollection<KV<String, Double>> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow());
 
 
         PAssert.that(dC).satisfies(
