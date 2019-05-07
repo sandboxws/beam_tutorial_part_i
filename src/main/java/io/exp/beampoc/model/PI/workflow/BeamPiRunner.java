@@ -1,8 +1,9 @@
 package io.exp.beampoc.model.PI.workflow;
 
-import com.sun.scenario.effect.Merge;
-import io.exp.beampoc.model.PI.*;
-import io.exp.beampoc.model.PI.beam.BeamCalcPiTerm;
+import io.exp.beampoc.model.PI.Model.PI_FinalCalc;
+import io.exp.beampoc.model.PI.Model.PI_Term;
+import io.exp.beampoc.model.PI.Model.PiInfiniteSeriesFactory;
+import io.exp.beampoc.model.PI.Model.PiInstruction;
 
 import io.exp.beampoc.model.PI.beam.BeamCalcTerm;
 import org.apache.beam.sdk.Pipeline;
@@ -63,26 +64,6 @@ public class BeamPiRunner {
 
         return pIn;
     }
-
-    //Not needed
-//    //Step 3
-//    public static PCollection<PI_Term> generatePiTermfromPiInstruction(PCollection<PiInstruction> pIn){
-//        PCollection<PI_Term> pOut = pIn.apply(ParDo.of(
-//                new DoFn<PiInstruction, PI_Term>() {
-//                    @ProcessElement
-//                    public void processElement(@Element PiInstruction c, OutputReceiver<PI_Term> out) {
-//                        for (int i=0;i<c.numOfSteps;i++){
-//                            PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
-//                            out.output(t);
-//                        }
-//                    }
-//                }
-//        ));
-//
-//        return pOut;
-//    }
-
-
 
 
     /**
@@ -158,7 +139,7 @@ public class BeamPiRunner {
     }
 
 
-    static class CalculatePiWorkflow
+    public static class CalculatePiWorkflow
             extends PTransform<PCollection<PiInstruction>, PCollection<Double>> {
 
         public static PTransform<PCollection<KV<String, java.lang.Double>>, PCollection<KV<String, Double>>> perKey() {
@@ -178,21 +159,7 @@ public class BeamPiRunner {
         @Override
         public PCollection< Double > expand(PCollection<PiInstruction> pIn) {
 
-//            PCollection<BeamCalcPiTerm> calcOut = pIn.apply("BeamCalcTerm",
-//                    ParDo.of(
-//                            new DoFn<PiInstruction, BeamCalcPiTerm>() {
-//                                @ProcessElement
-//                                public void processElement(@Element PiInstruction c, OutputReceiver< BeamCalcPiTerm > out) {
-//                                    for (int i=0;i<c.numOfSteps;i++){
-//                                        PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
-//                                        out.output(BeamCalcPiTerm.of(c.id,t));
-//
-//                                    }
-//                                }
-//                            }
-//
-//                    )
-//            );
+
             PCollection<BeamCalcTerm<PI_Term> > calcOut =pIn.apply("BeamCalcTerm",
                     ParDo.of(
                             new DoFn<PiInstruction, BeamCalcTerm<PI_Term>>() {
@@ -200,13 +167,16 @@ public class BeamPiRunner {
                                 public void processElement(@Element PiInstruction c, OutputReceiver< BeamCalcTerm<PI_Term> > out) {
                                     for (int i=0;i<c.numOfSteps;i++) {
                                         PI_Term t = PiInfiniteSeriesFactory.createTerm(c.SeriesName,i);
-                                        BeamCalcTerm<PI_Term> p = new BeamCalcTerm<PI_Term>();
-                                        p.JobKey=c.id;
-                                        p.term = t;
+
+                                        //BeamCalcTerm<PI_Term> p = new BeamCalcTerm<PI_Term>();
+                                        //p.JobKey=c.id;
+                                        //p.term = t;
+
+                                        BeamCalcTerm<PI_Term> p = BeamCalcTerm.of(c.id,t);
                                         assert(p.term!=null);
                                         out.output(p);
                                     }
-                                    LOGGER.debug("Setup:"+c.id+"Seriesname:"+c.SeriesName+":"+c.numOfSteps+"steps");
+                                    LOGGER.debug("Setup:"+c.id+" Seriesname:"+c.SeriesName+" steps:"+c.numOfSteps);
                                 }
                             }
                     )
@@ -235,9 +205,11 @@ public class BeamPiRunner {
                                 Optional<PI_Term> term = Optional.ofNullable(ts.term);
                                 if(term.isPresent()) {
                                     double d = ts.term.calculateTerm();
-                                    BeamCalcTerm<Double> dd = new BeamCalcTerm<Double>();
-                                    dd.JobKey = t.JobKey;
-                                    dd.term = d;
+
+                                    //BeamCalcTerm<Double> dd = new BeamCalcTerm<Double>();
+                                    //dd.JobKey = t.JobKey;
+                                    //dd.term = d;
+                                    BeamCalcTerm<Double> dd = BeamCalcTerm.of(t.JobKey,d);
                                     out.output(dd);
                                 }
                                // LOGGER.debug("Grp:"+dd.JobKey+"Term:"+(ts).term.getTerm() +":"+dd.term);

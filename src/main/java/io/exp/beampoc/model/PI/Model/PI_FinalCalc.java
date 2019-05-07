@@ -1,4 +1,4 @@
-package io.exp.beampoc.model.PI;
+package io.exp.beampoc.model.PI.Model;
 
 import java.io.Serializable;
 

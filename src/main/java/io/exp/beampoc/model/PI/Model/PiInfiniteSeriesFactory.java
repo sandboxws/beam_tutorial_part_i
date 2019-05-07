@@ -1,14 +1,11 @@
-package io.exp.beampoc.model.PI;
+package io.exp.beampoc.model.PI.Model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class PiInfiniteSeriesFactory {
     final static Logger logger= LoggerFactory.getLogger(PiInfiniteSeriesFactory.class);
-    final public static String packageName= "io.exp.beampoc.model.PI.";
+    final public static String packageName= "io.exp.beampoc.model.PI.Model.";
 
     //public final static Map<String, Class> classMap = new HashMap<String, Class>();
 

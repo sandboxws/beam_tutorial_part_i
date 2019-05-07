@@ -1,4 +1,4 @@
-package io.exp.apachebeam.kafka;
+package io.exp.apachebeam.kafka.healthcheck;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.coders.StringUtf8Coder;

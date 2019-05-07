@@ -1,4 +1,4 @@
-package io.exp.beampoc.model.PI;
+package io.exp.beampoc.model.PI.Model;
 
 public class GregoryLeibniz_Term  implements PI_Term{
     int term;

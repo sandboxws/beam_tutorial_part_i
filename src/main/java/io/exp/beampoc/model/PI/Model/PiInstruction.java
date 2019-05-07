@@ -1,10 +1,8 @@
-package io.exp.beampoc.model.PI;
+package io.exp.beampoc.model.PI.Model;
 
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class PiInstruction implements  Serializable{

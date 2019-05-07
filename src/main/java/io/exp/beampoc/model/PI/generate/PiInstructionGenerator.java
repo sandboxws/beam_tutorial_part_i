@@ -1,6 +1,6 @@
 package io.exp.beampoc.model.PI.generate;
 
-import io.exp.beampoc.model.PI.PiInstruction;
+import io.exp.beampoc.model.PI.Model.PiInstruction;
 
 import java.util.Arrays;
 import java.util.stream.Stream;

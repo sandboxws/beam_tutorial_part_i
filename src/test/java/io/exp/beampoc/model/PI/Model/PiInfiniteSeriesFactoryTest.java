@@ -1,8 +1,7 @@
-package io.exp.beampoc.model.PI;
+package io.exp.beampoc.model.PI.Model;
 
-import io.exp.beampoc.model.PI.Nilakantha_Term;
-import io.exp.beampoc.model.PI.PI_Term;
-import io.exp.beampoc.model.PI.PiInfiniteSeriesFactory;
+import io.exp.beampoc.model.PI.Model.PI_Term;
+import io.exp.beampoc.model.PI.Model.PiInfiniteSeriesFactory;
 import org.hamcrest.number.IsCloseTo;
 import org.junit.Test;
 

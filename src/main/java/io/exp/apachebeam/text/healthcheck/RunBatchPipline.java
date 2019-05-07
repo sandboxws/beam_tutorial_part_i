@@ -1,4 +1,4 @@
-package io.exp.apachebeam.text;
+package io.exp.apachebeam.text.healthcheck;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;

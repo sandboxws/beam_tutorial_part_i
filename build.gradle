@@ -48,3 +48,16 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-junit:2.0.0.0"
     testCompile "junit:junit:4.12"
 }
+
+println 'prepare to run profile selection'
+dependencies {
+    compile "org.apache.beam:beam-runners-direct-java:$beamVersion"
+}
+jar{
+    manifest{
+        attributes "Main-Class":'io.exp.apachebeam.inmemory.BeamPiRun'
+    }
+    from{
+        configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
+    }
+}
