@@ -172,7 +172,7 @@ public class BeamPiRunnerTest {
 
     @Test
     public void generatePiTermfromPiInstruction() {
-        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(2,100,"Nilakantha");
+        Stream<PiInstruction> s = PiInstructionGenerator.randomInstructionStream(20,100,"Nilakantha");
 
         PipelineOptions options = PipelineOptionsFactory.create();
 
