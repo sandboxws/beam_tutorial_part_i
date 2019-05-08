@@ -17,6 +17,7 @@ ext{
     log4jVersion = '2.10.0'
 }
 
+
 run {
     standardInput = System.in
 }
@@ -25,6 +26,17 @@ mainClassName = 'com.sandboxws.BeamBatchPipeline'
 repositories {
     mavenCentral()
 }
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 javadoc {
     source = sourceSets.main.allJava
@@ -49,15 +61,20 @@ dependencies {
     testCompile "junit:junit:4.12"
 }
 
+
+
 println 'prepare to run profile selection'
 
 apply from: rootProject.file('gradle/profile.gradle')
 
+shadowJar {
+    mergeServiceFiles()
+}
 jar{
     manifest{
         attributes "Main-Class":"io.exp.apachebeam.text.BeamPiRun"
     }
-    from{
-        configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
-    }
+    //from{
+    //    configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
+    //}
 }

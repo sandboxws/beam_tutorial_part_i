@@ -21,5 +21,9 @@ gradle -Pflink clean build
 ```
 Run command:
 ```
-java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun --inputFile=./config/test/instruction.dat --output=/tmp/PiTest --runner=FlinkRunner --flinkMaster=localhost:9081 --filesToStage=build/libs/beam_part_i-0.1.jar
+java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun \
+--runner=FlinkRunner --flinkMaster=localhost:9081 \
+--inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instruction.dat \
+--output=/tmp/PiTest \
+--filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar
 ```
