@@ -3,24 +3,19 @@ package io.exp.apachebeam.text;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import io.exp.apachebeam.Model.ExecutePipelineOptions;
-import io.exp.beampoc.model.PI.Model.PiInstruction;
-import io.exp.beampoc.model.PI.generate.PiInstructionGenerator;
-import io.exp.beampoc.model.PI.workflow.BeamPiRunner;
+import io.exp.beampoc.stream.PI.Model.PiInstruction;
+import io.exp.beampoc.stream.PI.workflow.BeamPiRunner;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
-import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
-import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.soap.Text;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class BeamPiRun {
     private final static Logger LOGGER = LoggerFactory.getLogger(BeamPiRun.class);

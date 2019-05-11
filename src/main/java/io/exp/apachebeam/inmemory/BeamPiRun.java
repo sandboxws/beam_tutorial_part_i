@@ -1,8 +1,8 @@
 package io.exp.apachebeam.inmemory;
 
-import io.exp.beampoc.model.PI.Model.PiInstruction;
-import io.exp.beampoc.model.PI.generate.PiInstructionGenerator;
-import io.exp.beampoc.model.PI.workflow.BeamPiRunner;
+import io.exp.beampoc.stream.PI.Model.PiInstruction;
+import io.exp.beampoc.stream.PI.generate.PiInstructionGenerator;
+import io.exp.beampoc.stream.PI.workflow.BeamPiRunner;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;

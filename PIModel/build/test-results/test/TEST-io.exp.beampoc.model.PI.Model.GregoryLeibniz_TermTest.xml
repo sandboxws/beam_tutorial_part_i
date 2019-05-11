@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="io.exp.beampoc.model.PI.Model.GregoryLeibniz_TermTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-05-11T06:28:37" hostname="Dexters-MacBook-Air.local" time="0.007">
-  <properties/>
-  <testcase name="calculateTerm" classname="io.exp.beampoc.model.PI.Model.GregoryLeibniz_TermTest" time="0.007"/>
-  <system-out><![CDATA[3.1414926535900345
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
