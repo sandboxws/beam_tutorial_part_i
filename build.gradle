@@ -61,7 +61,9 @@ dependencies {
     testCompile "junit:junit:4.12"
 }
 
-
+dependencies {
+    implementation project(':PIModel')
+}
 
 println 'prepare to run profile selection'
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.exp.beampoc.model.PI.Model.Nilakantha_TermTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-05-11T06:28:37" hostname="Dexters-MacBook-Air.local" time="0.014">
+  <properties/>
+  <testcase name="calculateTerm" classname="io.exp.beampoc.model.PI.Model.Nilakantha_TermTest" time="0.014"/>
+  <system-out><![CDATA[3.1415926535895418
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

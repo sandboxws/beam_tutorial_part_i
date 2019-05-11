@@ -30,17 +30,5 @@ public class PiInstruction implements  Serializable{
         PiInstruction i=gson.fromJson(json,PiInstruction.class);
         return i;
     }
-/*
-    public Map<String, Serializable> toMap(){
-        Map<String, Serializable> m = new HashMap<String, Serializable>();
-        m.put("id",this.id);
-        m.put("SeriesName",this.SeriesName);
-        m.put("numOfSteps",this.numOfSteps);
-        return m;
-    }*/
-    /*
-    public static PiInstruction fromMap(Map<String, Serializable> m){
 
-        return null;
-    }*/
 }
