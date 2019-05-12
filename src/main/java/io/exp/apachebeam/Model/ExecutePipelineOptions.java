@@ -14,6 +14,15 @@ public interface ExecutePipelineOptions extends PipelineOptions {
     String getOutput();
 
     void setOutput(String value);
+
+
+    @Description("BootStrapServer for Kafka")
+    public String getBootStrapServer();
+    void setBootStrapServer(String value);
+
+    @Description("Topic for Kafka")
+    public String getTopic();
+    void setTopic(String value);
 /*
     public String getFlinkMaster();
 

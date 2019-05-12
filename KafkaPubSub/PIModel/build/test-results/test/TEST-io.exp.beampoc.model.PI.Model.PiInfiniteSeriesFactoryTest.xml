@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.exp.beampoc.model.PI.Model.PiInfiniteSeriesFactoryTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-05-11T02:11:56" hostname="Dexters-MacBook-Air.local" time="0.317">
+  <properties/>
+  <testcase name="runThread" classname="io.exp.beampoc.model.PI.Model.PiInfiniteSeriesFactoryTest" time="0.01"/>
+  <testcase name="createTerm" classname="io.exp.beampoc.model.PI.Model.PiInfiniteSeriesFactoryTest" time="0.307"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
