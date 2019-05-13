@@ -27,7 +27,7 @@ public class KafkaPublisherRunnerTest {
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         String topic = "pi";
 
-        for(int ii=0;ii<5;ii++) {
+        for(int ii=0;ii<50;ii++) {
             PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[0], 5000);
 
             k.publish(topic, pi.id, pi.toString());

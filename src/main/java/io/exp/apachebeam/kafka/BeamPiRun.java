@@ -14,12 +14,15 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.Values;
+import org.apache.beam.sdk.transforms.windowing.FixedWindows;
+import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.kafka.common.serialization.DoubleSerializer;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +59,19 @@ public class BeamPiRun {
         consumerProperties.remove("key.deserializer");
         consumerProperties.remove("value.deserializer");
 
+        /*
+
+         /*
+     * Concept #3: Window into fixed windows. The fixed window size for this example defaults to 1
+     * minute (you can change this with a command-line option). See the documentation for more
+     * information on how fixed windows work, and for information on the other types of windowing
+     * available (e.g., sliding windows).
+     *
+        PCollection<String> windowedWords =
+                input.apply(
+                        Window.into(FixedWindows.of(Duration.standardMinutes(options.getWindowSize()))));
+         */
+
         PCollection<String> pStr = pipeline.apply(KafkaIO.<String, String>read()
                 .withBootstrapServers(options.getBootStrapServer())
                 .withTopic(options.getInputTopic())
@@ -63,17 +79,19 @@ public class BeamPiRun {
                 .withValueDeserializer(StringDeserializer.class)
 
                 .updateConsumerProperties(ImmutableMap.of("auto.offset.reset", (Object)"earliest","enable.auto.commit",(Object)"true","group.id",(Object)"test"))
-                .withReadCommitted()
+                //.withReadCommitted()
                 //.updateConsumerProperties(consumerProperties)
 
 
                 // We're writing to a file, which does not support unbounded data sources. This line makes it bounded to
                 // the first 5 records.
                 // In reality, we would likely be writing to a data source that supports unbounded data, such as BigQuery.
-                .withMaxNumRecords(5)
+                //.withMaxNumRecords(5)
 
                 .withoutMetadata() // PCollection<KV<Long, String>>
-        ).apply(Values.<String>create());
+        ).apply(Values.<String>create())
+        .apply(Window.<String>into(
+                FixedWindows.of(Duration.standardSeconds(options.getWindowSize()))));
 
         PCollection<PiInstruction> pInst=pStr.apply(ParDo.of(new DoFn<String, PiInstruction>() {
             @ProcessElement
@@ -98,7 +116,7 @@ public class BeamPiRun {
                         //LOGGER.debug("Text output:"+str);
                     }
                 }
-        )).apply(TextIO.write().to(options.getOutput()).withSuffix(".out"));
+        ));//.apply(TextIO.write().to(options.getOutput()).withSuffix(".out"));
 
         dC.apply(ParDo.of(
 
