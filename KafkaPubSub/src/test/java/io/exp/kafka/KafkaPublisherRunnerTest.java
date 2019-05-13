@@ -22,14 +22,16 @@ public class KafkaPublisherRunnerTest {
         k.publish("abcd","123","<abcd></abcd>");
     }
 
-    //@Test
+    @Test
     public void publishPiInstruction() throws Exception{
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         String topic = "pi";
 
-        PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[0],5000);
+        for(int ii=0;ii<5;ii++) {
+            PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[0], 5000);
 
-        k.publish(topic,pi.id,pi.toString());
+            k.publish(topic, pi.id, pi.toString());
+        }
 
     }
     @Test

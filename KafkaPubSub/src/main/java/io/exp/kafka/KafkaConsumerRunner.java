@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 public class KafkaConsumerRunner {
     final static Logger logger= LoggerFactory.getLogger(KafkaConsumerRunner.class);
@@ -38,9 +40,15 @@ public class KafkaConsumerRunner {
         p.props = setupProperty(brokerHostname,brokerPort,consumerGrp);
         return p;
     }
-    public static ImmutableMap<String,String> getPublisherMap(String brokerHostName, int brokerPort,String consumerGrp){
+    public static Map<String,Object> getConsumerMap(String brokerHostName, int brokerPort,String consumerGrp){
         Properties p = setupProperty(brokerHostName,brokerPort,consumerGrp);
-        return com.google.common.collect.Maps.fromProperties(p);
+
+        ImmutableMap<String,String> v = com.google.common.collect.Maps.fromProperties(p);
+        Map<String, Object> m = new TreeMap<String, Object>();
+        v.forEach( (key,value)->{
+            m.put(key,(Object)value);
+        });
+        return m;
     }
 
 

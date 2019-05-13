@@ -2,6 +2,8 @@ package io.exp.kafka;
 
 import org.junit.Test;
 
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 public class KafkaConsumerRunnerTest {
@@ -12,5 +14,12 @@ public class KafkaConsumerRunnerTest {
         String topic = "pi";
         k.consume(topic);
 
+    }
+
+    @Test
+    public void getConsumerMap() {
+        Map<String, Object> m = KafkaConsumerRunner.getConsumerMap("localhost",9092,"test1");
+        assertEquals(m.size(),6);
+        assertEquals(m.get("enable.auto.commit"),"true");
     }
 }

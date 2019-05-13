@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="io.exp.beampoc.stream.PI.Model.GregoryLeibniz_TermTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-05-13T03:01:45" hostname="Dexters-MacBook-Air.local" time="0.009">
+<testsuite name="io.exp.beampoc.stream.PI.Model.GregoryLeibniz_TermTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-05-13T03:41:47" hostname="Dexters-MacBook-Air.local" time="0.009">
   <properties/>
   <testcase name="calculateTerm" classname="io.exp.beampoc.stream.PI.Model.GregoryLeibniz_TermTest" time="0.009"/>
   <system-out><![CDATA[3.1414926535900345

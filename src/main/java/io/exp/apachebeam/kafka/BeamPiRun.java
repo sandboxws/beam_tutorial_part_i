@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import io.exp.apachebeam.Model.ExecutePipelineOptions;
 import io.exp.beampoc.stream.PI.Model.PiInstruction;
 import io.exp.beampoc.stream.PI.workflow.BeamPiRunner;
+import io.exp.kafka.KafkaConsumerRunner;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.kafka.KafkaIO;
@@ -22,6 +23,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class BeamPiRun {
@@ -44,15 +46,25 @@ public class BeamPiRun {
     public static void main(String[] args){
 
 
+
         ExecutePipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(ExecutePipelineOptions.class);
         Pipeline pipeline = Pipeline.create(options);
+
+
+
+       Map<String,Object> consumerProperties=KafkaConsumerRunner.getConsumerMap("localhost",9092,"grp1");
+        consumerProperties.remove("key.deserializer");
+        consumerProperties.remove("value.deserializer");
+
         PCollection<String> pStr = pipeline.apply(KafkaIO.<String, String>read()
                 .withBootstrapServers(options.getBootStrapServer())
                 .withTopic(options.getInputTopic())
                 .withKeyDeserializer(StringDeserializer.class)
                 .withValueDeserializer(StringDeserializer.class)
 
-                .updateConsumerProperties(ImmutableMap.of("auto.offset.reset", (Object)"earliest"))
+                .updateConsumerProperties(ImmutableMap.of("auto.offset.reset", (Object)"earliest","enable.auto.commit",(Object)"true","group.id",(Object)"test"))
+                .withReadCommitted()
+                //.updateConsumerProperties(consumerProperties)
 
 
                 // We're writing to a file, which does not support unbounded data sources. This line makes it bounded to
@@ -83,7 +95,7 @@ public class BeamPiRun {
 
                         String str = e.getKey()+":"+e.getValue();
                         out.output(str);
-                        LOGGER.debug("Text output:"+str);
+                        //LOGGER.debug("Text output:"+str);
                     }
                 }
         )).apply(TextIO.write().to(options.getOutput()).withSuffix(".out"));

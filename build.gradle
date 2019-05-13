@@ -63,6 +63,7 @@ dependencies {
 
 dependencies {
     implementation project(':PIModel')
+    implementation project(':KafkaPubSub')
 }
 
 println 'prepare to run profile selection'
