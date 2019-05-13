@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class KafkaConsumerRunnerTest {
 
-    @Test
+    //@Test
     public void testconsume() {
         KafkaConsumerRunner k = KafkaConsumerRunner.of("localhost",9092,"test1");
         String topic = "pi";

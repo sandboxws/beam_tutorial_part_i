@@ -15,6 +15,7 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.Values;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.kafka.common.serialization.DoubleSerializer;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -47,11 +48,12 @@ public class BeamPiRun {
         Pipeline pipeline = Pipeline.create(options);
         PCollection<String> pStr = pipeline.apply(KafkaIO.<String, String>read()
                 .withBootstrapServers(options.getBootStrapServer())
-                .withTopic(options.getTopic())
+                .withTopic(options.getInputTopic())
                 .withKeyDeserializer(StringDeserializer.class)
                 .withValueDeserializer(StringDeserializer.class)
 
                 .updateConsumerProperties(ImmutableMap.of("auto.offset.reset", (Object)"earliest"))
+
 
                 // We're writing to a file, which does not support unbounded data sources. This line makes it bounded to
                 // the first 5 records.
@@ -71,6 +73,8 @@ public class BeamPiRun {
 
             }
         }));;
+
+        //Write into Text file
         PCollection<KV<String, Double>> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow());
         dC.apply(ParDo.of(
                 new DoFn<KV<String, Double>, String>() {
@@ -79,9 +83,41 @@ public class BeamPiRun {
 
                         String str = e.getKey()+":"+e.getValue();
                         out.output(str);
+                        LOGGER.debug("Text output:"+str);
                     }
                 }
         )).apply(TextIO.write().to(options.getOutput()).withSuffix(".out"));
+
+        dC.apply(ParDo.of(
+
+                new DoFn<KV<String, Double>, KV<String, String>>() {
+                    @ProcessElement
+                    public void processElement(@Element KV<String, Double> e,OutputReceiver< KV<String, String> > out){
+
+                        String strVal = e.getKey()+":"+e.getValue().toString();
+                        out.output(KV.of(e.getKey(),strVal));
+                        LOGGER.debug("Kafka output:"+strVal);
+                    }
+                }
+
+
+        ))
+                .apply(KafkaIO.<String, String>write()
+                .withBootstrapServers(options.getBootStrapServer())
+                .withTopic(options.getOutputTopic())
+
+                .withKeySerializer(StringSerializer.class)
+                .withValueSerializer(StringSerializer.class)
+
+                // you can further customize KafkaProducer used to write the records by adding more
+                // settings for ProducerConfig. e.g, to enable compression :
+                //.updateProducerProperties(ImmutableMap.of("compression.type", "gzip"))
+
+                // Optionally enable exactly-once sink (on supported runners). See JavaDoc for withEOS().
+                // My experiment found lose of message in DirectRunner
+                //.withEOS(20, "eos-sink-group-id")
+        );
+
 
         pipeline.run().waitUntilFinish();
     }

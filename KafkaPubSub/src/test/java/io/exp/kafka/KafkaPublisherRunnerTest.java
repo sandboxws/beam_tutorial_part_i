@@ -10,19 +10,19 @@ import static org.junit.Assert.*;
 
 public class KafkaPublisherRunnerTest {
 
-    @Test
+    //@Test
     public void publicToNewTopic()throws Exception {
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         k.publish("abcd","123","<abcd2></abcd2>");
     }
 
-    @Test
+    //@Test
     public void publishMsgToTopic()throws Exception {
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         k.publish("abcd","123","<abcd></abcd>");
     }
 
-    @Test
+    //@Test
     public void publishPiInstruction() throws Exception{
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         String topic = "pi";
