@@ -26,8 +26,8 @@ public class KafkaPublisherRunnerTest {
     public void publishPiInstruction() throws Exception{
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         String topic = "pi";
-
-        for(int ii=0;ii<50;ii++) {
+        final int numOfRequest=5;
+        for(int ii=0;ii<numOfRequest;ii++) {
             PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[0], 5000);
 
             k.publish(topic, pi.id, pi.toString());

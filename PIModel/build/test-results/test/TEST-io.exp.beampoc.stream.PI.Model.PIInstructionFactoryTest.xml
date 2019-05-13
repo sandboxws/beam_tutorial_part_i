@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="io.exp.beampoc.stream.PI.Model.PIInstructionFactoryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-05-13T06:18:24" hostname="Dexters-MacBook-Air.local" time="0.01">
-  <properties/>
-  <testcase name="shouldGenerateInstruction" classname="io.exp.beampoc.stream.PI.Model.PIInstructionFactoryTest" time="0.007"/>
-  <testcase name="shouldThrowExceptionIfSteplessthan1" classname="io.exp.beampoc.stream.PI.Model.PIInstructionFactoryTest" time="0.0"/>
-  <testcase name="shouldThrowExceptionIfSeriesNotFound" classname="io.exp.beampoc.stream.PI.Model.PIInstructionFactoryTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

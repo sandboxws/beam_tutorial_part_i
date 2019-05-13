@@ -6,7 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import io.exp.apachebeam.Model.ExecutePipelineOptions;
 import io.exp.beampoc.stream.PI.Model.PiInstruction;
 import io.exp.beampoc.stream.PI.workflow.BeamPiRunner;
-import io.exp.kafka.KafkaConsumerRunner;
+
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.kafka.KafkaIO;
@@ -54,11 +54,11 @@ public class BeamPiRun {
         Pipeline pipeline = Pipeline.create(options);
 
 
-
+/*
        Map<String,Object> consumerProperties=KafkaConsumerRunner.getConsumerMap("localhost",9092,"grp1");
         consumerProperties.remove("key.deserializer");
         consumerProperties.remove("value.deserializer");
-
+*/
         /*
 
          /*
