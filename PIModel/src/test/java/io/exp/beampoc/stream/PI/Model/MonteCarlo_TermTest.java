@@ -9,7 +9,7 @@ public class MonteCarlo_TermTest {
 
     String seriesName="MonteCarlo";
 
-    @Test
+    //@Test
     public void calculateTerm() {
 
         //totally, 10B times of simulation to obtain accuracy up to 4 digits
