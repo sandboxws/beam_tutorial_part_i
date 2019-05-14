@@ -37,6 +37,16 @@ public class GregoryLeibniz_Term  implements PI_Term{
 //    }
 
     @Override
+    public void setTotalTerm(int total) {
+
+    }
+
+    @Override
+    public int getTotalTerm() {
+        return 0;
+    }
+
+    @Override
     public PI_FinalCalc getFinalCalculation() {
         return (accumOfSeries -> accumOfSeries*4);
     }

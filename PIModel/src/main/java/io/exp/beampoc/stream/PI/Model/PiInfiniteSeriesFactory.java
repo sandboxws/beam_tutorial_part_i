@@ -22,6 +22,7 @@ public class PiInfiniteSeriesFactory {
             t=(PI_Term)c.newInstance();
             assert(t!=null);
             t.setTerm(term);
+
             return t;
         }catch(Exception e){
             logger.error(e.getMessage());
@@ -29,11 +30,13 @@ public class PiInfiniteSeriesFactory {
         }
 
     }
-    public final static PI_FinalCalc getFinalCalc(String SeriesName){
+    public final static PI_FinalCalc getFinalCalc(String SeriesName,int totalTerm){
         PI_FinalCalc finalCalc=null;
         try {
             Class c = PiInfiniteSeriesFactory.getClass(SeriesName);
-            finalCalc=((PI_Term)c.newInstance()).getFinalCalculation();
+            PI_Term t =((PI_Term)c.newInstance());
+            t.setTotalTerm(totalTerm);
+            finalCalc=t.getFinalCalculation();
             return finalCalc;
         }catch(Exception e){
             logger.error(e.getMessage());

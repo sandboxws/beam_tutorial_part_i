@@ -186,7 +186,7 @@ public class BeamPiRunner {
                             new DoFn<PiInstruction, KV<String, PI_FinalCalc> >(){
                                 @ProcessElement
                                 public void processElement(@Element PiInstruction c, OutputReceiver < KV <String, PI_FinalCalc> > out ){
-                                    PI_FinalCalc finalCalc=PiInfiniteSeriesFactory.getFinalCalc(c.SeriesName);
+                                    PI_FinalCalc finalCalc=PiInfiniteSeriesFactory.getFinalCalc(c.SeriesName,c.numOfSteps);
                                     out.output( KV.of(c.id, finalCalc) );
                                 }
                             }
