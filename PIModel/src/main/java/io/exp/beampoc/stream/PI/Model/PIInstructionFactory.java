@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 public class PIInstructionFactory {
     final static Logger logger= LoggerFactory.getLogger(PIInstructionFactory.class);
     final public static String packageName= "io.exp.beampoc.stream.PI.Model.";
-    final public static String[] SupportedSeries = {"Nilakantha","GregoryLeibniz"};
+    final public static String[] SupportedSeries = {"MonteCarlo","Nilakantha","GregoryLeibniz"};
 
 
     public final static PiInstruction createInstruction(String SeriesName, int step)  {

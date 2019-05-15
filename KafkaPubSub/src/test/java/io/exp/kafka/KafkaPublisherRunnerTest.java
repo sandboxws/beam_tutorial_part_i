@@ -22,7 +22,7 @@ public class KafkaPublisherRunnerTest {
         k.publish("abcd","123","<abcd></abcd>");
     }
 
-    @Test
+    //@Test
     public void publishPiInstruction() throws Exception{
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         String topic = "pi";
