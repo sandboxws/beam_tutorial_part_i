@@ -12,7 +12,7 @@ public class KafkaPublisherMain {
 
         KafkaPublisherRunner k = KafkaPublisherRunner.of("localhost",9092);
         String topic = "pi";
-        final int numOfRequest=5;
+
         for(int ii=0;ii<numOfRequest;ii++) {
             PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[series], 2);
 
