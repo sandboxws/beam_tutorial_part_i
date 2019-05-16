@@ -23,10 +23,11 @@ Run command:
 ```
 java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun \
 --runner=FlinkRunner --flinkMaster=localhost:9081 \
---inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instruction.dat \
+--inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instructionSingle.dat \
 --output=/tmp/PiTest \
 --filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
---parallelism=2
+--parallelism=2 \
+--maxBundleSize=1000
 ```
 
 ## Direct Runner : Run Kafka as I/O
@@ -56,3 +57,10 @@ java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun
 --filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
 --parallelism=2
 ```
+
+# Flink docker run
+docker compose directory:
+/Users/dexter/sandbox/DockerTrain/flink-session/docker-compose.yml
+docker-compose up
+docker-compose kill
+

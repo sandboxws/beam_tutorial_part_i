@@ -14,7 +14,7 @@ public class KafkaPublisherMain {
         String topic = "pi";
 
         for(int ii=0;ii<numOfRequest;ii++) {
-            PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[series], 2);
+            PiInstruction pi = PIInstructionFactory.createInstruction(PIInstructionFactory.SupportedSeries[series], numStep);
 
             k.publish(topic, pi.id, pi.toString());
         }
