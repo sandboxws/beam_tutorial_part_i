@@ -50,8 +50,9 @@ public class BeamPiRun {
 
 
 
-        PCollection<KV<String, Double>> dC=BeamPiRunner.generatePiWorkflow(pInst);
-/*
+        //PCollection<KV<String, Double>> dC=BeamPiRunner.generatePiWorkflow(pInst);
+        PCollection<KV<String, Double>> dC=pInst.apply(new BeamPiRunner.CalculatePiWorkflow());
+
         dC.apply(ParDo.of(
                 new DoFn<KV<String, Double>, String>() {
                     @ProcessElement
@@ -62,7 +63,7 @@ public class BeamPiRun {
                     }
                 }
         )).apply(TextIO.write().to(options.getOutput()).withSuffix(".out"));
-*/
+
         pipeline.run().waitUntilFinish();
     }
 }
