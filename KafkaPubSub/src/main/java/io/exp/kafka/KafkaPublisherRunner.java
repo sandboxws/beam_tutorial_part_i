@@ -19,9 +19,9 @@ public class KafkaPublisherRunner {
         props = new Properties();
     }
 
-    public static Properties setupProperty(String brokerHostname, int brokerPort){
+
+    public static Properties setupProperty(String bootstrapserver){
         Properties p = new Properties();
-        String bootstrapserver = brokerHostname+":"+brokerPort;
         p.put("bootstrap.servers", bootstrapserver);
         p.put("acks", "all");
         p.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -29,13 +29,20 @@ public class KafkaPublisherRunner {
         return p;
     }
     public static ImmutableMap<String,String> getPublisherMap(String brokerHostName, int brokerPort){
-        Properties p = setupProperty(brokerHostName,brokerPort);
+        String bootstrapserver = brokerHostName+":"+brokerPort;
+        Properties p = setupProperty(bootstrapserver);
         return com.google.common.collect.Maps.fromProperties(p);
     }
 
-    public static KafkaPublisherRunner of(String hostname, int brokerPort){
+    public static KafkaPublisherRunner of(String brokerHostName, int brokerPort){
+        String bootstrapserver = brokerHostName+":"+brokerPort;
         KafkaPublisherRunner p = new KafkaPublisherRunner();
-        p.props = setupProperty(hostname,brokerPort);
+        p.props = setupProperty(bootstrapserver);
+        return p;
+    }
+    public static KafkaPublisherRunner of(String bootstrapserver){
+        KafkaPublisherRunner p = new KafkaPublisherRunner();
+        p.props = setupProperty(bootstrapserver);
         return p;
     }
 

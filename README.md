@@ -47,10 +47,22 @@ gradle -Pflink clean build
 ```
 Run command:
 ```
+Local:
 java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun \
 --runner=FlinkRunner \
 --flinkMaster=localhost:9081 \
 --bootStrapServer=localhost:9092 \
+--inputTopic=pi \
+--outputTopic=pi_out \
+--output=/tmp/PiKafkaFlink \
+--filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
+--parallelism=2
+
+Kafka container:
+java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun \
+--runner=FlinkRunner \
+--flinkMaster=localhost:9081 \
+--bootStrapServer=192.168.99.107:9094 \
 --inputTopic=pi \
 --outputTopic=pi_out \
 --output=/tmp/PiKafkaFlink \

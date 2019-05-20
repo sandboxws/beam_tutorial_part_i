@@ -23,9 +23,10 @@ public class KafkaConsumerRunner {
         props = new Properties();
     }
 
-    public static Properties setupProperty(String brokerHostname, int brokerPort,String consumerGrp){
+
+
+    public static Properties setupProperty(String bootstrapserver,String consumerGrp){
         Properties p = new Properties();
-        String bootstrapserver = brokerHostname+":"+brokerPort;
         p.put("bootstrap.servers", bootstrapserver);
         p.setProperty("group.id", consumerGrp);
         p.setProperty("enable.auto.commit", "true");
@@ -36,12 +37,20 @@ public class KafkaConsumerRunner {
     }
 
     public static KafkaConsumerRunner of(String brokerHostname, int brokerPort,String consumerGrp){
+        String bootstrapserver = brokerHostname+":"+brokerPort;
         KafkaConsumerRunner p = new KafkaConsumerRunner();
-        p.props = setupProperty(brokerHostname,brokerPort,consumerGrp);
+        p.props = setupProperty(bootstrapserver,consumerGrp);
+        return p;
+    }
+
+    public static KafkaConsumerRunner of(String bootstrapserver,String consumerGrp){
+        KafkaConsumerRunner p = new KafkaConsumerRunner();
+        p.props = setupProperty(bootstrapserver,consumerGrp);
         return p;
     }
     public static Map<String,Object> getConsumerMap(String brokerHostName, int brokerPort,String consumerGrp){
-        Properties p = setupProperty(brokerHostName,brokerPort,consumerGrp);
+        String bootstrapserver = brokerHostName+":"+brokerPort;
+        Properties p = setupProperty(bootstrapserver,consumerGrp);
 
         ImmutableMap<String,String> v = com.google.common.collect.Maps.fromProperties(p);
         Map<String, Object> m = new TreeMap<String, Object>();
