@@ -12,7 +12,8 @@ public interface ExecutePipelineOptions extends PipelineOptions {
 
     void setInputFile(String value);
 
-    @Validation.Required
+    //@Validation.Required
+    @Description("Path of the file to write into")
     String getOutput();
 
     void setOutput(String value);

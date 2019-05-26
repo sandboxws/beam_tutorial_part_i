@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class KafkaConsumerRunnerTest {
 
-    @Test
+    //@Test
     public void testconsume() {
         KafkaConsumerRunner k = KafkaConsumerRunner.of("192.168.99.104:9094","test1");
         String topic = "pi";

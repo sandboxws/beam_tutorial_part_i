@@ -1,0 +1,6 @@
+println 'running dataflow runner build'
+dependencies {
+    compile "org.apache.beam:beam-runners-google-cloud-dataflow-java:$beamVersion"
+    runtime "org.apache.beam:beam-runners-google-cloud-dataflow-java:$beamVersion"
+    testRuntime "org.apache.beam:beam-runners-direct-java:$beamVersion"
+}

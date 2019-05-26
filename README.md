@@ -17,15 +17,15 @@ java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun 
 ## Flink Runner : Run Text file as I/O
 Build command:
 ```
-gradle -Pflink clean build
+mvn -Pflink-runner clean install
 ```
 Run command:
 ```
-java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun \
+java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text.BeamPiRun \
 --runner=FlinkRunner --flinkMaster=localhost:9081 \
 --inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instruction.dat \
---output=/tmp/PiTest \
---filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
+--output=/tmp/PiFlink \
+--filesToStage=target/beam-tutorial-part-bundled-0.1.jar \
 --parallelism=2 \
 --maxBundleSize=1000
 ```
@@ -54,7 +54,6 @@ java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun
 --bootStrapServer=localhost:9092 \
 --inputTopic=pi \
 --outputTopic=pi_out \
---output=/tmp/PiKafkaFlink \
 --filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
 --parallelism=2
 
@@ -62,10 +61,9 @@ Kafka container:
 java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun \
 --runner=FlinkRunner \
 --flinkMaster=localhost:9081 \
---bootStrapServer=192.168.99.107:9094 \
+--bootStrapServer=192.168.99.106:9094 \
 --inputTopic=pi \
 --outputTopic=pi_out \
---output=/tmp/PiKafkaFlink \
 --filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
 --parallelism=2
 ```
@@ -75,4 +73,21 @@ docker compose directory:
 /Users/dexter/sandbox/DockerTrain/flink-session/docker-compose.yml
 docker-compose up
 docker-compose kill
+
+# DataFlow runner text run
+build by maven:
+```
+mvn -Pdataflow-runner clean install
+```
+
+```
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/dexter/.ssh/pigpig/gcp.serviceacct.peer2peer-67bc368759d4.json
+
+java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text.BeamPiRun \
+	--runner=DataflowRunner \
+  --project=peer2peer \
+  --inputFile=gs://pi_calculation/instruction.dat --output=gs://pi_calculation/piDtest \
+  --tempLocation=gs://pi_calculation/temp/ \
+  --region=us-central1 
+```
 
