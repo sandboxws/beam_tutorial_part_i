@@ -44,10 +44,12 @@ java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun 
 Build command:
 ```
 gradle -Pflink clean build
+mvn -Pflink-runner clean install
+
 ```
 Run command:
 ```
-Local:
+Local gradle build:
 java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun \
 --runner=FlinkRunner \
 --flinkMaster=localhost:9081 \
@@ -55,6 +57,16 @@ java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.kafka.BeamPiRun
 --inputTopic=pi \
 --outputTopic=pi_out \
 --filesToStage=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/build/libs/beam_part_i-0.1.jar \
+--parallelism=2
+
+Local maven build:
+java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.kafka.BeamPiRun \
+--runner=FlinkRunner \
+--flinkMaster=localhost:9081 \
+--bootStrapServer=localhost:9092 \
+--inputTopic=pi \
+--outputTopic=pi_out \
+--filesToStage=target/beam-tutorial-part-bundled-0.1.jar \
 --parallelism=2
 
 Kafka container:
