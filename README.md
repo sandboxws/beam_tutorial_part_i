@@ -37,7 +37,7 @@ java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text
 --inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instruction.dat \
 --output=/tmp/PiFlink \
 --filesToStage=target/beam-tutorial-part-bundled-0.1.jar \
---parallelism=2 \
+--parallelism=4 \
 --maxBundleSize=1000
 ```
 

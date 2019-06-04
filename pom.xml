@@ -191,7 +191,7 @@
             <dependencies>
                 <dependency>
                     <groupId>org.apache.beam</groupId>
-                    <artifactId>beam-runners-flink_2.11</artifactId>
+                    <artifactId>beam-runners-flink-1.7</artifactId>
                     <version>${beam.version}</version>
 
                 </dependency>
