@@ -17,10 +17,21 @@ java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun 
 ## Flink Runner : Run Text file as I/O
 Build command:
 ```
+gradle -Pflink clean build
 mvn -Pflink-runner clean install
 ```
 Run command:
 ```
+Local gradle build
+java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun \
+--runner=FlinkRunner --flinkMaster=localhost:9081 \
+--inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instruction.dat \
+--output=/tmp/PiFlink \
+--filesToStage=build/libs/beam_part_i-0.1.jar \
+--parallelism=4 \
+--maxBundleSize=200
+
+Local maven build
 java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text.BeamPiRun \
 --runner=FlinkRunner --flinkMaster=localhost:9081 \
 --inputFile=/Users/dexter/sandbox/apachebeam/beam_tutorial_part_i/config/test/instruction.dat \
