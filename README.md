@@ -100,12 +100,23 @@ docker-compose kill
 # DataFlow runner text run
 build by maven:
 ```
+gradle -Pdataflow clean build
 mvn -Pdataflow-runner clean install
 ```
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=/Users/dexter/.ssh/pigpig/gcp.serviceacct.peer2peer-67bc368759d4.json
 
+Gradle build
+java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun \
+	--runner=DataflowRunner \
+  --project=peer2peer \
+  --inputFile=gs://pi_calculation/instruction.dat --output=gs://pi_calculation/piDtest \
+  --tempLocation=gs://pi_calculation/temp/ \
+  --region=us-central1 
+
+
+Maven build
 java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text.BeamPiRun \
 	--runner=DataflowRunner \
   --project=peer2peer \
