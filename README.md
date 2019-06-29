@@ -39,6 +39,13 @@ java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text
 --filesToStage=target/beam-tutorial-part-bundled-0.1.jar \
 --parallelism=4 \
 --maxBundleSize=1000
+
+
+java -classpath build/libs/beam_part_i-0.1.jar io.exp.apachebeam.text.BeamPiRun \
+--runner=FlinkRunner --flinkMaster=35.239.171.146:8081 \
+--inputFile=gs://pi_calculation/instruction.dat --output=gs://pi_calculation/piDtest \
+--filesToStage=build/libs/beam_part_i-0.1.jar \
+--maxBundleSize=200
 ```
 
 ## Direct Runner : Run Kafka as I/O
