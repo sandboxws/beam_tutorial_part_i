@@ -75,11 +75,3 @@ shadowJar {
     mergeServiceFiles()
 
 }
-jar{
-    manifest{
-        attributes "Main-Class":"io.exp.apachebeam.text.BeamPiRun"
-    }
-    //from{
-    //    configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
-    //}
-}
