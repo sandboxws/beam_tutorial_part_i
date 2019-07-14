@@ -132,3 +132,9 @@ java -classpath target/beam-tutorial-part-bundled-0.1.jar io.exp.apachebeam.text
   --region=us-central1 
 ```
 
+## build docker
+````
+gradle -Pflink clean build
+export JOB_JAR_TARGET=build/libs/beam_part_i-0.1.jar
+docker build --build-arg job_jar="${JOB_JAR_TARGET}"  -t gcr.io/peer2peer/picalc .
+````
