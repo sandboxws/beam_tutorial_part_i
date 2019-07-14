@@ -1,0 +1,20 @@
+def directProfiles='direct'
+def flinkProfiles='flink'
+def dataflowProfiles='dataflow'
+def propertyDrivenProfiles;
+println 'running profile selection'
+
+if(project.hasProperty('direct')){
+    propertyDrivenProfiles = directProfiles
+    apply from: rootProject.file('gradle/profile.direct.gradle');
+}
+else if(project.hasProperty('flink')){
+    propertyDrivenProfiles = flinkProfiles
+    apply from: rootProject.file('gradle/profile.flink.gradle');
+}else if(project.hasProperty('dataflow')){
+    propertyDrivenProfiles = dataflowProfiles
+    apply from: rootProject.file('gradle/profile.dataflow.gradle');
+}else{
+    apply from: rootProject.file('gradle/profile.direct.gradle');
+}
+

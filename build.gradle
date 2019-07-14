@@ -11,6 +11,13 @@ description = "Apache Beam Introduction - Building Your First Pipeline"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+ext{
+    beamVersion = '2.13.0'
+    slf4jVersion = '1.7.9'
+    log4jVersion = '2.10.0'
+}
+
+
 run {
     standardInput = System.in
 }
@@ -20,13 +27,51 @@ repositories {
     mavenCentral()
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
 javadoc {
     source = sourceSets.main.allJava
     classpath = configurations.compile
 }
 
 dependencies {
-    compile group: 'org.apache.beam', name: 'beam-sdks-java-core', version:'2.8.0'
-    runtime group: 'org.slf4j', name: 'slf4j-jdk14', version:'1.7.25'
-    runtime group: 'org.apache.beam', name: 'beam-runners-direct-java', version:'2.8.0'
+
+    compile  "org.apache.beam:beam-sdks-java-core:$beamVersion"
+    compile  "org.apache.beam:beam-sdks-java-io-google-cloud-platform:$beamVersion"
+    compile  "org.apache.beam:beam-sdks-java-io-kafka:$beamVersion"
+
+
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    compile "org.apache.logging.log4j:log4j:$log4jVersion"
+    
+    compile "com.google.guava:guava:20.0"
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+    testCompile "org.hamcrest:hamcrest-junit:2.0.0.0"
+    testCompile "junit:junit:4.12"
+}
+
+dependencies {
+    implementation project(':PIModel')
+    //implementation project(':KafkaPubSub')
+}
+
+println 'prepare to run profile selection'
+
+apply from: rootProject.file('gradle/profile.gradle')
+
+shadowJar {
+    zip64 true
+    mergeServiceFiles()
+
 }

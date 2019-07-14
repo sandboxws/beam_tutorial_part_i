@@ -286,7 +286,3 @@ local.properties
 # End of https://www.gitignore.io/api/vim,osx,java,maven,intellij,sublimetext,visualstudiocode
 
 *.txt
-
-
-target/
-software/
